@@ -1,4 +1,3 @@
-
 function main() {
   const args = process.argv.slice(2);
 
@@ -6,21 +5,21 @@ function main() {
     create: {
       mainArgRequired: false,
       requiredArgs: ["title", "price"],
-      resolver: createController
+      resolver: createController,
     },
     get: {
       mainArgRequired: true,
-      resolver: getController
+      resolver: getController,
     },
     update: {
       mainArgRequired: true,
       requiredArgs: ["title", "price"],
-      resolver: updateController
+      resolver: updateController,
     },
     del: {
       mainArgRequired: true,
-      resolver: delController
-    }
+      resolver: delController,
+    },
   });
 
   if (argsObject.error) {
@@ -33,7 +32,7 @@ main();
 function argsController(args, commandsMap) {
   const commandName = args.length > 0 ? args[0] : null;
   if (!commandName) {
-    return { error: "No command provided." };
+    return { error: "Faltó el comando." };
   }
   const commandConfig = commandsMap[commandName];
 
@@ -47,7 +46,9 @@ function argsController(args, commandsMap) {
   let i = 1;
   if (commandConfig.mainArgRequired) {
     if (!args[i] || args[i].startsWith("--")) {
-      return { error: `El comando '${commandName}' requiere un argumento principal.` };
+      return {
+        error: `El comando '${commandName}' requiere un argumento principal.`,
+      };
     }
     mainArg = args[i];
     i++;
@@ -77,7 +78,11 @@ function argsController(args, commandsMap) {
     );
 
     if (missingArgs.length > 0) {
-      return { error: `Faltan argumentos requeridos para el comando '${commandName}': ${missingArgs.join(", ")}` };
+      return {
+        error: `Faltan argumentos requeridos para el comando '${commandName}': ${missingArgs.join(
+          ", "
+        )}`,
+      };
     }
   }
   if (commandConfig.mainArgRequired) {
@@ -135,7 +140,12 @@ function updateProp(id, data) {
  * Obtiene una propiedad de la base de datos según su ID y la devuelve.
  */
 function getProp(id) {
-  return { id, title: "Sample Title", price: 100, createdAt: new Date().toISOString() };
+  return {
+    id,
+    title: "Sample Title",
+    price: 100,
+    createdAt: new Date().toISOString(),
+  };
 }
 
 // Views Mock
@@ -170,11 +180,17 @@ function testArgsController() {
   };
 
   const tests = [
-    { command: ["create", "--title", "Departamento", "--price", "15000"], expectedError: false },
+    {
+      command: ["create", "--title", "Departamento", "--price", "15000"],
+      expectedError: false,
+    },
     { command: ["create", "--title", "Departamento"], expectedError: true },
     { command: ["get", "id-123"], expectedError: false },
     { command: ["get"], expectedError: true },
-    { command: ["update", "id-123", "--precio", "300000"], expectedError: false },
+    {
+      command: ["update", "id-123", "--precio", "300000"],
+      expectedError: false,
+    },
     { command: ["del", "id-123"], expectedError: false },
     { command: ["del"], expectedError: true },
   ];
@@ -182,7 +198,10 @@ function testArgsController() {
   tests.forEach(({ command, expectedError }, index) => {
     const result = argsController(command, commandsMap);
     const hasError = Boolean(result.error);
-    console.log(`Test ${index + 1}: ${hasError === expectedError ? '✅' : '❌'} - Comando: ${command.join(" ")}`);
+    console.log(
+      `Test ${index + 1}: ${hasError === expectedError ? "✅" : "❌"
+      } - Comando: ${command.join(" ")}`
+    );
   });
 }
 
